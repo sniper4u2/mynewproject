@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4">Tool Management</h1>
+            <p class="lead">Manage and monitor all available tools</p>
+        </div>
+    </div>
+
+    <!-- Tool Categories -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tool Categories</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-primary text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">OSINT Tools</h5>
+                                    <p class="card-text">Open-source intelligence tools</p>
+                                    <button class="btn btn-light" onclick="showTools('osint')">
+                                        View Tools
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">SS7 Tools</h5>
+                                    <p class="card-text">SS7 protocol tools</p>
+                                    <button class="btn btn-light" onclick="showTools('ss7')">
+                                        View Tools
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Monitoring Tools</h5>
+                                    <p class="card-text">Network monitoring tools</p>
+                                    <button class="btn btn-light" onclick="showTools('monitoring')">
+                                        View Tools
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-warning text-white h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">Exploit Tools</h5>
+                                    <p class="card-text">Exploitation tools</p>
+                                    <button class="btn btn-light" onclick="showTools('exploit')">
+                                        View Tools
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool List -->
+    <div class="row" id="toolList">
+        <!-- Tools will be dynamically loaded here -->
+    </div>
+
+    <!-- Tool Details Modal -->
+    <div class="modal fade" id="toolModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tool Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="toolDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="runTool()">Run Tool</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool Parameters Modal -->
+    <div class="modal fade" id="toolParamsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tool Parameters</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="toolParamsForm">
+                        <!-- Parameters will be dynamically loaded here -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitToolParams()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let currentTool = null;
+    let toolParams = {};
+
+    // Load tools when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTools();
+    });
+
+    async function loadTools() {
+        try {
+            const response = await fetch('/api/tools');
+            const tools = await response.json();
+            displayTools(tools);
+        } catch (error) {
+            console.error('Error loading tools:', error);
+        }
+    }
+
+    function displayTools(tools) {
+        const container = document.getElementById('toolList');
+        container.innerHTML = '';
+
+        tools.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'col-md-4 mb-4';
+            card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${tool.name}</h5>
+                        <p class="card-text">${tool.description}</p>
+                        <div class="badge bg-${tool.status === 'ready' ? 'success' : 'danger'}">
+                            ${tool.status}
+                        </div>
+                        <button class="btn btn-primary mt-2" onclick="showToolDetails('${tool.name}')">
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function showToolDetails(toolName) {
+        try {
+            const response = await fetch(`/api/tools/${toolName}`);
+            const tool = await response.json();
+            
+            const modal = new bootstrap.Modal(document.getElementById('toolModal'));
+            document.getElementById('toolDetails').innerHTML = `
+                <h5>${tool.name}</h5>
+                <p><strong>Description:</strong> ${tool.description}</p>
+                <p><strong>Version:</strong> ${tool.version}</p>
+                <p><strong>Status:</strong> <span class="badge bg-${tool.status === 'ready' ? 'success' : 'danger'}">
+                    ${tool.status}
+                </span></p>
+                <div class="mt-3">
+                    <h6>Features:</h6>
+                    <ul>
+                        ${tool.features.map(f => `<li>${f}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="mt-3">
+                    <h6>Protocols:</h6>
+                    <ul>
+                        ${tool.protocols.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            currentTool = tool;
+            modal.show();
+        } catch (error) {
+            console.error('Error loading tool details:', error);
+        }
+    }
+
+    function runTool() {
+        if (!currentTool) return;
+        
+        const modal = new bootstrap.Modal(document.getElementById('toolParamsModal'));
+        
+        // Load tool parameters
+        loadToolParameters();
+        modal.show();
+    }
+
+    async function loadToolParameters() {
+        try {
+            const response = await fetch(`/api/tools/${currentTool.name}/parameters`);
+            const params = await response.json();
+            
+            const form = document.getElementById('toolParamsForm');
+            form.innerHTML = '';
+            
+            params.forEach(param => {
+                const div = document.createElement('div');
+                div.className = 'mb-3';
+                div.innerHTML = `
+                    <label for="${param.name}" class="form-label">${param.name}</label>
+                    <input type="${param.type}" 
+                           class="form-control" 
+                           id="${param.name}" 
+                           ${param.required ? 'required' : ''}>
+                    <div class="form-text">${param.description}</div>
+                `;
+                form.appendChild(div);
+            });
+            
+            toolParams = params;
+        } catch (error) {
+            console.error('Error loading tool parameters:', error);
+        }
+    }
+
+    async function submitToolParams() {
+        try {
+            const formData = new FormData(document.getElementById('toolParamsForm'));
+            const params = {};
+            
+            for (let pair of formData.entries()) {
+                params[pair[0]] = pair[1];
+            }
+
+            const response = await fetch(`/api/tools/${currentTool.name}/run`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            });
+
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                alert('Tool executed successfully!');
+            } else {
+                alert('Error executing tool: ' + result.message);
+            }
+
+            // Close modals
+            const toolModal = bootstrap.Modal.getInstance(document.getElementById('toolModal'));
+            const paramsModal = bootstrap.Modal.getInstance(document.getElementById('toolParamsModal'));
+            paramsModal.hide();
+            toolModal.hide();
+        } catch (error) {
+            console.error('Error executing tool:', error);
+        }
+    }
+
+    function showTools(category) {
+        // Filter and display tools based on category
+        // This would be implemented based on your backend API
+    }
+</script>
+{% endblock %}

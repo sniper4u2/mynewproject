@@ -1,0 +1,166 @@
+2025-05-24 16:09:36,040 - INFO - Successfully connected to MongoDB
+2025-05-24 16:19:43,640 - INFO - Successfully connected to MongoDB
+2025-05-24 16:20:52,907 - INFO - Successfully connected to MongoDB
+2025-05-24 16:22:23,089 - INFO - Successfully connected to MongoDB
+2025-05-24 16:24:48,072 - INFO - Successfully connected to MongoDB
+2025-05-24 16:27:04,413 - INFO - Successfully connected to MongoDB
+2025-05-24 16:28:12,125 - INFO - Successfully connected to MongoDB
+2025-05-24 16:29:53,882 - INFO - Successfully connected to MongoDB
+2025-05-24 16:30:16,377 - INFO - Successfully connected to MongoDB
+2025-05-24 16:30:43,352 - INFO - Successfully connected to MongoDB
+2025-05-24 16:31:00,269 - INFO - Successfully connected to MongoDB
+2025-05-24 16:31:19,417 - INFO - Successfully connected to MongoDB
+2025-05-24 16:31:57,306 - INFO - Successfully connected to MongoDB
+2025-05-24 16:32:20,037 - INFO - Successfully connected to MongoDB
+2025-05-24 16:32:45,299 - INFO - Successfully connected to MongoDB
+2025-05-24 16:33:02,350 - INFO - Successfully connected to MongoDB
+2025-05-24 16:33:38,564 - INFO - Successfully connected to MongoDB
+2025-05-24 18:11:58,270 - INFO - Successfully connected to MongoDB
+2025-05-24 18:13:06,144 - INFO - Successfully connected to MongoDB
+2025-05-24 18:13:18,286 - INFO - Successfully connected to MongoDB
+2025-05-24 18:13:31,109 - INFO - Successfully connected to MongoDB
+2025-05-24 18:13:52,642 - INFO - Successfully connected to MongoDB
+2025-05-24 18:13:53,084 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:13:53,084 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:16:05,440 - INFO - Successfully connected to MongoDB
+2025-05-24 18:18:15,427 - INFO - Successfully connected to MongoDB
+2025-05-24 18:27:57,306 - INFO - Successfully connected to MongoDB
+2025-05-24 18:28:14,814 - INFO - Successfully connected to MongoDB
+2025-05-24 18:32:29,775 - INFO - Successfully connected to MongoDB
+2025-05-24 18:32:48,619 - INFO - Successfully connected to MongoDB
+2025-05-24 18:33:11,258 - INFO - Successfully connected to MongoDB
+2025-05-24 18:33:11,710 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:33:11,710 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:33:35,526 - INFO - 127.0.0.1 - - [24/May/2025 18:33:35] "[31m[1mGET /api/osint/capture/start HTTP/1.1[0m" 405 -
+2025-05-24 18:33:35,638 - INFO - 127.0.0.1 - - [24/May/2025 18:33:35] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-24 18:34:47,310 - INFO - Successfully connected to MongoDB
+2025-05-24 18:35:12,010 - INFO - Successfully connected to MongoDB
+2025-05-24 18:35:12,429 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:35:12,429 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:35:15,876 - INFO - 127.0.0.1 - - [24/May/2025 18:35:15] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-24 18:35:15,933 - INFO - 127.0.0.1 - - [24/May/2025 18:35:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-24 18:35:40,470 - INFO - Successfully connected to MongoDB
+2025-05-24 18:35:53,794 - INFO - Successfully connected to MongoDB
+2025-05-24 18:35:54,238 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:35:54,238 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:37:46,592 - INFO - Successfully connected to MongoDB
+2025-05-24 18:38:07,580 - INFO - Successfully connected to MongoDB
+2025-05-24 18:38:08,015 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:38:08,015 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:38:13,611 - INFO - 127.0.0.1 - - [24/May/2025 18:38:13] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-24 18:38:13,659 - INFO - 127.0.0.1 - - [24/May/2025 18:38:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-24 18:38:24,006 - INFO - 192.168.1.17 - - [24/May/2025 18:38:24] "[33mGET / HTTP/1.1[0m" 404 -
+2025-05-24 18:38:24,066 - INFO - 192.168.1.17 - - [24/May/2025 18:38:24] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-24 18:41:44,502 - INFO - Successfully connected to MongoDB
+2025-05-24 18:41:44,926 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:41:44,927 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:41:47,886 - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/src/core/server.py", line 52, in index
+    return render_template('tools.html')
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/b13/Desktop/mynewproject/templates/tools.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/b13/Desktop/mynewproject/templates/base.html", line 299, in top-level template code
+    <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+    ^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 950, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'dashboard'. Did you mean 'api.stop_gsm_monitor' instead?
+2025-05-24 18:41:47,889 - INFO - 127.0.0.1 - - [24/May/2025 18:41:47] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-24 18:42:10,566 - INFO - Successfully connected to MongoDB
+2025-05-24 18:42:10,989 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.1.17:5001
+2025-05-24 18:42:10,989 - INFO - [33mPress CTRL+C to quit[0m
+2025-05-24 18:42:13,712 - ERROR - Exception on / [GET]
+Traceback (most recent call last):
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ~^^^^^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/src/core/server.py", line 52, in index
+    return render_template('tools.html')
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/templating.py", line 151, in render_template
+    return _render(app, template, context)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/templating.py", line 132, in _render
+    rv = template.render(context)
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/jinja2/environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/b13/Desktop/mynewproject/templates/tools.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/b13/Desktop/mynewproject/templates/base.html", line 299, in top-level template code
+    <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+    ^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1697, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/flask/app.py", line 1686, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "/home/b13/Desktop/mynewproject/venv/lib/python3.13/site-packages/werkzeug/routing/map.py", line 950, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'dashboard'. Did you mean 'api.stop_gsm_monitor' instead?
+2025-05-24 18:42:13,717 - INFO - 127.0.0.1 - - [24/May/2025 18:42:13] "[35m[1mGET / HTTP/1.1[0m" 500 -

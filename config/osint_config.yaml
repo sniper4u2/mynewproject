@@ -1,0 +1,76 @@
+osint:
+  enabled: true
+  protocols:
+    - tcp
+    - udp
+    - http
+    - dns
+    - smtp
+    - imap
+    - pop3
+    - ssh
+    - tls
+    - ssl
+    - ftp
+    - smb
+    - mqtt
+    - gsm
+    - ss7
+  hlr:
+    enabled: true
+    providers:
+      - name: "HLR Lookup API"
+        base_url: "https://api.hlrlookup.com"
+        api_key: "your_api_key_here"
+        timeout: 5
+        rate_limit: 100
+      - name: "Mobile Number Lookup"
+        base_url: "https://api.mnlookup.com"
+        api_key: "your_api_key_here"
+        timeout: 5
+        rate_limit: 100
+    cache:
+      enabled: true
+      ttl_seconds: 3600
+      max_entries: 1000
+    retry:
+      max_attempts: 3
+      backoff_factor: 0.5
+      max_delay: 10
+    logging:
+      enabled: true
+      level: INFO
+      format: "%(asctime)s - %(levelname)s - %(message)s"
+      file: "hlr.log"
+  wireshark:
+    enabled: true
+    capture:
+      interface: "any"
+      buffer_size: 1000000
+      capture_filter: ""
+      display_filter: ""
+    analysis:
+      deep_packet_inspection: true
+      protocol_decoding: true
+      tls_decryption: false
+      tls_keys_file: ""
+    storage:
+      pcap_directory: "captures"
+      max_size_mb: 1000
+      retention_days: 30
+  protocol_interception:
+    enabled: true
+    targets:
+      - protocol: http
+        ports: [80, 8080, 8000]
+      - protocol: https
+        ports: [443, 8443]
+      - protocol: dns
+        ports: [53]
+      - protocol: smtp
+        ports: [25, 587]
+    logging:
+      enabled: true
+      level: INFO
+      format: "%(asctime)s - %(levelname)s - %(message)s"
+      file: "osint.log"

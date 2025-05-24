@@ -1,0 +1,187 @@
+# Protocol Configuration
+
+# Communication Protocols
+http:
+  enabled: true
+  endpoints:
+    - domain: "cloudfront.net"
+      path: "/api/data"
+      method: "POST"
+      headers:
+        User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+      tls:
+        version: "TLSv1.3"
+        cipher_suites:
+          - "TLS_AES_128_GCM_SHA256"
+          - "TLS_AES_256_GCM_SHA384"
+  heartbeat:
+    interval_seconds: 30
+    timeout_seconds: 5
+
+dns:
+  enabled: true
+  servers:
+    - "8.8.8.8"
+    - "1.1.1.1"
+    - "9.9.9.9"
+  domain_prefixes:
+    - "cloudfront"
+    - "storage.googleapis"
+    - "s3.amazonaws"
+  chunk_size: 63
+  heartbeat:
+    interval_seconds: 60
+    timeout_seconds: 10
+
+mqtt:
+  enabled: true
+  brokers:
+    - host: "localhost"
+      port: 1883
+      qos: 1
+      retain: true
+    - host: "mqtt.google.com"
+      port: 8883
+      tls: true
+  topics:
+    - "devices/{device_id}/data"
+    - "devices/{device_id}/commands"
+  heartbeat:
+    interval_seconds: 15
+    timeout_seconds: 5
+
+coap:
+  enabled: true
+  endpoints:
+    - host: "localhost"
+      port: 5683
+      path: "/data"
+    - host: "coap.google.com"
+      port: 5683
+      path: "/device/{device_id}/data"
+  heartbeat:
+    interval_seconds: 20
+    timeout_seconds: 5
+
+# GSM Settings
+gsm:
+  enabled: true
+  modems:
+    - id: "modem1"
+      port: "/dev/ttyUSB0"
+      baudrate: 115200
+      timeout: 5
+  sms:
+    enabled: true
+    max_messages: 100
+    retry_attempts: 3
+    retry_delay_seconds: 5
+  network:
+    operators:
+      - "AT&T"
+      - "Verizon"
+      - "T-Mobile"
+    signal_check_interval_seconds: 60
+
+# Common Settings
+common:
+  encryption:
+    enabled: true
+    algorithm: "AES-256"
+    key_exchange: "ECDH"
+  retry:
+    enabled: true
+    delays:
+      - 1
+      - 2
+      - 4
+      - 8
+      - 16
+      - 32
+  proxy:
+    enabled: true
+    providers:
+      - "tor"
+      - "socks5"
+    timeout_seconds: 10
+  fallback:
+    enabled: true
+    protocols:
+      - "dns"
+      - "mqtt"
+      - "coap"
+      - "http"
+    max_traps_per_second: 10
+
+# Modbus TCP Settings
+modbus:
+  enabled: true
+  servers:
+    - id: "modbus1"
+      host: "192.168.1.102"
+      port: 502
+      max_connections: 5
+  security:
+    authentication: true
+    encryption: true
+  timeout_seconds: 5
+
+# WebSocket Settings
+websocket:
+  enabled: true
+  servers:
+    - id: "ws1"
+      host: "localhost"
+      port: 8765
+      max_connections: 50
+  security:
+    wss: true
+    certificate: "ssl/cert.pem"
+    key: "ssl/key.pem"
+  ping_interval_seconds: 30
+
+# Serial Communication Settings
+serial:
+  enabled: true
+  ports:
+    - id: "serial1"
+      port: "/dev/ttyUSB1"
+      baudrate: 9600
+      timeout: 1
+  protocols:
+    - "modbus-rtu"
+    - "custom"
+
+# Security Settings
+security:
+  encryption:
+    enabled: true
+    algorithms:
+      - "AES-256"
+      - "RSA-2048"
+  authentication:
+    required: true
+    methods:
+      - "token"
+      - "certificate"
+      - "password"
+  rate_limiting:
+    enabled: true
+    max_requests: 100
+    window_seconds: 60
+
+# Monitoring Settings
+monitoring:
+  enabled: true
+  frequency_seconds: 30
+  metrics:
+    - "connection_status"
+    - "signal_strength"
+    - "response_time"
+    - "error_rate"
+    - "bandwidth_usage"
+  alerts:
+    thresholds:
+      connection_loss: 60  # seconds
+      high_latency: 1000  # milliseconds
+      error_rate: 0.05  # 5%

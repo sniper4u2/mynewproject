@@ -1,0 +1,84 @@
+gsm:
+  protocols:
+    - 2G
+    - 3G
+    - 4G
+    - 5G
+    - GSM
+    - UMTS
+    - LTE
+    - NR
+    - CDMA
+    - TDMA
+    - FDMA
+    - WCDMA
+    - HSPA
+    - VoLTE
+    - VoNR
+
+ss7:
+  enabled: true
+  server:
+    host: localhost
+    port: 2705
+  protocols:
+    - MAP
+    - SCCP
+    - TCAP
+    - ISUP
+    - MTP
+  features:
+    sms:
+      enabled: true
+      default_route: SS7
+    call_control:
+      enabled: true
+    location:
+      enabled: true
+    subscriber:
+      enabled: true
+
+shodan:
+  enabled: true
+  api_key: qsNOcVJWgtJv1Gyhs46OjQzuLbVTSmdM
+  services:
+    - ip
+    - host
+    - search
+    - scan
+    - honeyscore
+    - ports
+    - protocols
+    - asn
+    - country
+    - city
+    - os
+    - product
+    - isp
+    - org
+    - banner
+    - ssl
+    - vulns
+    - exploits
+    - malware
+    - feed
+    - alerts
+    - stats
+    - info
+    - api
+    - myip
+    - quota
+    - credits
+    - plans
+  scan_ports:
+    - 80
+    - 443
+    - 21
+    - 22
+    - 23
+    - 25
+    - 3389
+    - 8080
+    - 8443
+    - 5060
+    - 5061

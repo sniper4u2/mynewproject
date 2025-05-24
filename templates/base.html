@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Advanced C2 Server{% endblock %}</title>
+    
+    <!-- Modern UI Frameworks -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+        <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="h-screen bg-gradient-to-b from-blue-900 to-black p-4 fixed left-0 top-0 w-64">
+        <div class="logo mb-8 text-3xl font-bold text-blue-400">
+            <i class="fas fa-satellite-dish mr-2"></i>C2 Server
+        </div>
+        <nav class="space-y-2">
+            <a href="/dashboard" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-home mr-3"></i> Dashboard
+            </a>
+            <a href="/agents" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-mobile-alt mr-3"></i> Devices
+            </a>
+            <a href="/connections" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-network-wired mr-3"></i> Connections
+            </a>
+            <a href="/osint" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-search mr-3"></i> OSINT
+            </a>
+            <a href="/monitoring" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-chart-line mr-3"></i> Monitoring
+            </a>
+            <a href="/settings" class="flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors">
+                <i class="fas fa-cog mr-3"></i> Settings
+            </a>
+        </nav>
+    </div>
+        }
+
+        /* Matrix Effect */
+        .matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .matrix span {
+            position: absolute;
+            color: var(--matrix-color);
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* 3D Container */
+        .container-3d {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px var(--glow-color);
+        }
+
+        .nav-link {
+            color: var(--matrix-color) !important;
+            text-shadow: 0 0 5px var(--glow-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-color) !important;
+            text-shadow: 0 0 10px var(--glow-color),
+                         0 0 20px var(--glow-color);
+        }
+
+        /* Logo and Signature */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+
+        .navbar-brand span {
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+
+        .navbar-brand .text-warning {
+            color: #ffd700 !important;
+        }
+
+        .navbar-brand .text-success {
+            color: var(--matrix-color) !important;
+        }
+
+        /* Cards and Panels */
+        .card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px var(--glow-color);
+            transform: perspective(1000px) rotateX(10deg) rotateY(10deg);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1.05);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--matrix-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 255, 0, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Tables */
+        .table {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .table th {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            color: var(--matrix-color);
+        }
+
+        .table td {
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+            color: var(--matrix-color);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dashboard Stats */
+        .stat-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px var(--glow-color);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--glow-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--matrix-color);
+            text-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Mobile Traffic Visualization */
+        .traffic-visualization {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            height: 400px;
+        }
+
+        /* Agent Status */
+        .agent-status {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-active {
+            color: var(--matrix-color);
+        }
+
+        .status-inactive {
+            color: #ff0000;
+        }
+
+        /* Command Interface */
+        .command-interface {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .command-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            color: var(--matrix-color);
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Effect -->
+    <div class="matrix" id="matrix"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <img src="{{ url_for('static', filename='assets/b13_logo.png') }}" alt="B13 Logo" style="height: 30px; margin-right: 10px;">
+                <span class="text-warning">B13</span><span class="text-success">C2</span>
+                <span class="text-muted ms-2">by sniper4u2</span>
+            </a>
+            <!-- Tunisian Flag -->
+            <img src="{{ url_for('static', filename='assets/tunisia_flag.png') }}" alt="Tunisian Flag" style="height: 20px; margin-left: 10px;">
+            <span class="text-danger ms-2">TN</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('agents_page') }}">Agents</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mobile_page') }}">Mobile Traffic</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-3d">
+        <div class="container mt-5 pt-5">
+            {% block content %}
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/dashboard">
+                    <i class="fas fa-satellite-dish"></i> C2 Server
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/agents"><i class="fas fa-mobile-alt"></i> Devices</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/osint"><i class="fas fa-search"></i> OSINT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/shodan"><i class="fas fa-network-wired"></i> Network</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/settings"><i class="fas fa-cog"></i> Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <div class="container-fluid mt-4">
+            <div class="row">
+                <div class="col-12">
+                    {% block page_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container">
+            <span class="text-muted">Advanced C2 Server Platform © 2025</span>
+        </div>
+    </footer>
+{% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Matrix Effect
+        const matrix = document.getElementById('matrix');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        const fontSize = 16;
+        const columns = window.innerWidth / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrix.innerHTML = '';
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                const span = document.createElement('span');
+                span.textContent = text;
+                span.style.left = i * fontSize + 'px';
+                span.style.top = drops[i] * fontSize + 'px';
+                matrix.appendChild(span);
+                
+                if (drops[i] * fontSize > window.innerHeight || Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // Responsive matrix effect
+        window.addEventListener('resize', () => {
+            columns = window.innerWidth / fontSize;
+            drops.length = columns;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Shodan Service - B13 C2{% endblock %}
+
+{% block content %}
+<!-- Shodan Service Overview -->
+<div class="card fade-in">
+    <div class="card-header">
+        <h5 class="mb-0">Shodan Service</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_scans }}</div>
+                    <div class="stat-label">Total Scans</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.active_scans }}</div>
+                    <div class="stat-label">Active Scans</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.api_credits }}</div>
+                    <div class="stat-label">API Credits</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scan Controls -->
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Scan Controls</h5>
+    </div>
+    <div class="card-body">
+        <form id="scanForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="target" class="form-label">Target</label>
+                        <input type="text" class="form-control" id="target" name="target" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="scanType" class="form-label">Scan Type</label>
+                        <select class="form-select" id="scanType" name="scanType" required>
+                            <option value="ip">IP Address</option>
+                            <option value="host">Hostname</option>
+                            <option value="search">Search Query</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="ports" class="form-label">Ports</label>
+                        <select class="form-select" id="ports" name="ports" multiple>
+                            {% for port in config.shodan.scan_ports %}
+                            <option value="{{ port }}">Port {{ port }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Start Scan
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Recent Scans -->
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Scans</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Target</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Results</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scan in scans %}
+                    <tr>
+                        <td>{{ scan.id }}</td>
+                        <td>{{ scan.target }}</td>
+                        <td>{{ scan.type }}</td>
+                        <td>
+                            <span class="badge {% if scan.status == 'completed' %}bg-success{% elif scan.status == 'running' %}bg-info{% else %}bg-warning{% endif %}">
+                                {{ scan.status }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if scan.results %}
+                            <button class="btn btn-sm btn-primary" onclick="viewScanResults('{{ scan.id }}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if scan.status == 'running' %}
+                            <button class="btn btn-sm btn-danger" onclick="stopScan('{{ scan.id }}')">
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Scan Results Modal -->
+<div class="modal fade" id="resultsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scan Results</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="resultsContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Scan Form Submission
+    document.getElementById('scanForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const response = await fetch('{{ url_for('start_scan') }}', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            showToast('Scan started successfully', 'success');
+            setTimeout(() => window.location.reload(), 2000);
+        } else {
+            showToast('Failed to start scan', 'error');
+        }
+    });
+
+    // View Scan Results
+    function viewScanResults(scanId) {
+        fetch(`{{ url_for('get_scan_results') }}/${scanId}`)
+            .then(response => response.json())
+            .then(data => {
+                const content = document.getElementById('resultsContent');
+                content.innerHTML = `
+                    <div class="scan-results">
+                        <h4>Scan Results</h4>
+                        <pre class="result-json">${JSON.stringify(data.results, null, 2)}</pre>
+                    </div>
+                `;
+                
+                const modal = document.getElementById('resultsModal');
+                modal.classList.add('show');
+                modal.style.display = 'block';
+            });
+    }
+
+    // Stop Scan
+    function stopScan(scanId) {
+        if (confirm('Are you sure you want to stop this scan?')) {
+            fetch(`{{ url_for('stop_scan') }}/${scanId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Scan stopped successfully', 'success');
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    showToast('Failed to stop scan', 'error');
+                }
+            });
+        }
+    }
+
+    // Auto-refresh scan list every 30 seconds
+    setInterval(() => {
+        window.location.reload();
+    }, 30000);
+</script>
+{% endblock %}

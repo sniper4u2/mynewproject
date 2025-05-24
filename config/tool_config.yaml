@@ -1,0 +1,111 @@
+# Tool Configuration
+
+# API Keys
+api_keys:
+  haveibeenpwned: "your_api_key_here"
+  ipstack: "your_ipstack_key"
+  opencagedata: "your_opencage_key"
+
+# Tool Settings
+tools:
+  # OSINT Tools
+  haveibeenpwned:
+    enabled: true
+    timeout: 30
+    retries: 3
+    
+  scylla:
+    enabled: true
+    timeout: 60
+    retries: 2
+    
+  # SS7 Tools
+  sigploit:
+    enabled: true
+    path: "src/tools/ss7/sigploit"
+    protocols:
+      - SS7
+      - GSM
+      - MAP
+    
+  silentsms:
+    enabled: true
+    path: "src/tools/ss7/silentsms"
+    features:
+      - SMS
+      - USSD
+      - Call
+    
+  # Monitoring Tools
+  sentrymba:
+    enabled: true
+    path: "src/tools/monitoring/sentrymba"
+    features:
+      - sms
+      - call
+      - location
+    
+  sigtrace:
+    enabled: true
+    path: "src/tools/monitoring/sigtrace"
+    protocols:
+      - SS7
+      - GSM
+      - MAP
+    
+  # Exploit Tools
+  redline:
+    enabled: true
+    path: "src/tools/exploit/redline"
+    features:
+      - sms
+      - call
+      - location
+      - data
+    
+  raccoon:
+    enabled: true
+    path: "src/tools/exploit/raccoon"
+    features:
+      - osint
+      - recon
+      - exploit
+    
+  # Geolocation Tools
+  geolocation:
+    enabled: true
+    providers:
+      - ip
+      - phone
+      - gps
+    
+# Network Settings
+network:
+  timeout: 30
+  retries: 3
+  proxy: null
+  user_agent: "C2Server/1.0"
+
+# Logging Settings
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/tool_manager.log"
+
+# Cache Settings
+cache:
+  enabled: true
+  ttl: 3600
+  max_size: 1000
+
+# Rate Limiting
+rate_limiting:
+  enabled: true
+  requests_per_minute: 60
+  burst_limit: 10
+
+# Security Settings
+security:
+  api_key_required: true
+  ip_whitelist: []
+  request_validation: true

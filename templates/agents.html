@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Agents - B13 C2{% endblock %}
+
+{% block content %}
+<!-- Agents Grid -->
+<div class="row">
+    {% for agent in agents %}
+    <div class="col-md-4 mb-4">
+        <div class="card agent-card fade-in">
+            <div class="card-header">
+                <h5 class="mb-0">{{ agent.name }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="agent-status">
+                    <i class="fas {% if agent.status == 'active' %}fa-circle text-success{% else %}fa-circle text-danger{% endif %}"></i>
+                    <span class="status-label">{{ agent.status }}</span>
+                </div>
+                <div class="agent-info">
+                    <p><strong>ID:</strong> {{ agent.id }}</p>
+                    <p><strong>Platform:</strong> {{ agent.platform }}</p>
+                    <p><strong>Last Seen:</strong> {{ agent.last_seen }}</p>
+                </div>
+                <div class="agent-actions">
+                    <button class="btn btn-primary btn-sm" onclick="sendCommand('{{ agent.id }}')">
+                        <i class="fas fa-terminal"></i> Send Command
+                    </button>
+                    {% if agent.status == 'active' %}
+                    <button class="btn btn-success btn-sm" onclick="terminateAgent('{{ agent.id }}')">
+                        <i class="fas fa-power-off"></i> Terminate
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Command Modal -->
+<div class="modal fade" id="commandModal" tabindex="-1">">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Command</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="commandForm">
+                    <input type="hidden" id="targetAgent" name="targetAgent">
+                    <div class="mb-3">
+                        <label for="commandType" class="form-label">Command Type</label>
+                        <select class="form-select" id="commandType" name="commandType" required>
+                            <option value="">Select a command type</option>
+                            <option value="shell">Shell Command</option>
+                            <option value="file">File Operation</option>
+                            <option value="network">Network Operation</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="commandInput" class="form-label">Command</label>
+                        <textarea class="form-control command-input" id="commandInput" name="commandInput" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitCommand()">Send Command</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Command Modal Functions
+    function sendCommand(agentId) {
+        document.getElementById('targetAgent').value = agentId;
+        document.getElementById('commandModal').classList.add('show');
+        document.getElementById('commandModal').style.display = 'block';
+    }
+
+    function submitCommand() {
+        const form = document.getElementById('commandForm');
+        const formData = new FormData(form);
+        
+        fetch('{{ url_for('send_command') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Command sent successfully', 'success');
+            } else {
+                showToast('Failed to send command', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error: ' + error, 'error');
+        });
+        
+        document.getElementById('commandModal').classList.remove('show');
+        document.getElementById('commandModal').style.display = 'none';
+    }
+
+    // Toast Notifications
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast fade show ${type}`;
+        toast.innerHTML = `
+            <div class="toast-header">
+                <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 150);
+        }, 3000);
+    }
+</script>
+{% endblock %}

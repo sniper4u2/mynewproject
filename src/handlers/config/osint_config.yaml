@@ -1,0 +1,21 @@
+osint:
+  hlr:
+    providers:
+      - name: hlr-lookup
+        base_url: https://api.hlr-lookup.com
+        api_keys:
+          - ${HLR_API_KEY1}
+          - ${HLR_API_KEY2}
+        rate_limit:
+          calls: 100
+          period: 60  # seconds
+        cache:
+          ttl_seconds: 3600  # 1 hour
+          max_entries: 1000
+        retry:
+          max_attempts: 3
+          backoff_factor: 1
+          max_delay: 30
+        logging:
+          format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+          file: 'logs/hlr.log'

@@ -1,0 +1,53 @@
+server:
+  host: 127.0.0.1
+  port: 5001
+  debug: true
+
+database:
+  uri: mongodb://localhost:27017
+  name: c2_server
+  auth_enabled: true
+
+security:
+  jwt:
+    secret_key: your-secret-key-here
+    token_expires: 3600  # 1 hour
+    cookie_secure: true
+    cookie_name: access_token
+
+protocols:
+  gsm:
+    enabled: true
+    heartbeat_interval: 30
+    retry_delays: [1, 2, 4, 8, 16, 32]
+  ss7:
+    enabled: true
+    protocols:
+      - MAP
+      - SCCP
+      - MTP
+  dns_tunneling:
+    enabled: true
+    domain: tunnel.example.com
+  mqtt:
+    enabled: true
+    broker: localhost
+    port: 1883
+  coap:
+    enabled: true
+    port: 5683
+
+encryption:
+  key: your-encryption-key-here
+
+logging:
+  level: INFO
+  file: logs/c2_server.log
+
+web:
+  static_folder: static
+  template_folder: templates
+
+api:
+  version: 1.0
+  prefix: /api/v1

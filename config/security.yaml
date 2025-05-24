@@ -1,0 +1,36 @@
+authentication:
+  jwt:
+    secret: ${SECRET_KEY}
+    expiration: 3600
+    algorithm: HS256
+  
+encryption:
+  key: ${ENCRYPTION_KEY}
+  algorithm: AES-256
+
+api:
+  rate_limit:
+    enabled: true
+    requests: 100
+    window: 60
+  
+ssl:
+  enabled: true
+  cert_file: certs/server.crt
+  key_file: certs/server.key
+
+firewall:
+  enabled: true
+  rules:
+    - action: ALLOW
+      protocol: TCP
+      port: 5000
+      description: Web server
+    - action: ALLOW
+      protocol: TCP
+      port: 27017
+      description: MongoDB
+    - action: ALLOW
+      protocol: TCP
+      port: 8086
+      description: InfluxDB

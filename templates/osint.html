@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+
+{% block title %}OSINT - B13 C2{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Capture Controls</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="captureInterface" class="form-label">Interface</label>
+                        <select class="form-select" id="captureInterface">
+                            <option value="any">Any Interface</option>
+                            <option value="eth0">eth0</option>
+                            <option value="wlan0">wlan0</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="captureFilter" class="form-label">Capture Filter</label>
+                        <input type="text" class="form-control" id="captureFilter" placeholder="e.g., port 80 or tcp">
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" onclick="startCapture()">Start Capture</button>
+                        <button class="btn btn-danger" onclick="stopCapture()">Stop Capture</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title">Capture Files</h5>
+                </div>
+                <div class="card-body">
+                    <div id="captureFilesList" class="list-group">
+                        <!-- Capture files will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- HLR Lookup Section -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">HLR Lookup</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hlrNumber" class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" id="hlrNumber" placeholder="Enter phone number">
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-primary" onclick="lookupNumber()">Lookup</button>
+                                <button class="btn btn-outline-primary" onclick="bulkLookup()">Bulk Lookup</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="bulkNumbers" class="form-label">Bulk Numbers (one per line)</label>
+                                <textarea class="form-control" id="bulkNumbers" rows="4" placeholder="Enter multiple numbers"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Analysis Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Network Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Protocol Statistics -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="card-title">Protocol Statistics</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="protocolStats" class="list-group">
+                                        <!-- Protocol stats will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Connection Analysis -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="card-title">Connection Analysis</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Source</th>
+                                                    <th>Destination</th>
+                                                    <th>Protocol</th>
+                                                    <th>Count</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="connectionTable">
+                                                <!-- Connection data will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Network Analysis Results -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title">Network Analysis Results</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="networkAnalysis" class="list-group">
+                                <!-- Network analysis results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DNS Requests -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title">DNS Requests</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Source</th>
+                                            <th>Destination</th>
+                                            <th>Query</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dnsTable">
+                                        <!-- DNS requests will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HTTP Requests -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title">HTTP Requests</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Source</th>
+                                            <th>Destination</th>
+                                            <th>Method</th>
+                                            <th>Path</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="httpTable">
+                                        <!-- HTTP requests will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TLS Handshakes -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="card-title">TLS Handshakes</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Source</th>
+                                            <th>Destination</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tlsTable">
+                                        <!-- TLS handshakes will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentCapture = null;
+    let hlrResults = {};
+
+    function lookupNumber() {
+        const number = document.getElementById('hlrNumber').value.trim();
+        if (!number) {
+            toastr.error('Please enter a phone number');
+            return;
+        }
+
+        fetch(`/api/osint/hlr/lookup/${number}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    toastr.error(data.error);
+                    return;
+                }
+
+                const networkAnalysis = document.getElementById('networkAnalysis');
+                networkAnalysis.innerHTML = '';
+
+                // Add main information
+                const mainInfo = document.createElement('div');
+                mainInfo.className = 'list-group-item';
+                mainInfo.innerHTML = `
+                    <h6 class="mb-1">Number Information</h6>
+                    <p class="mb-1"><strong>Country:</strong> ${data.country}</p>
+                    <p class="mb-1"><strong>Network:</strong> ${data.network}</p>
+                    <p class="mb-1"><strong>MCC/MNC:</strong> ${data.mcc}/${data.mnc}</p>
+                    <p class="mb-1"><strong>Porting Status:</strong> ${data.porting_status}</p>
+                    <p class="mb-1"><strong>Roaming Status:</strong> ${data.roaming_status}</p>
+                `;
+                networkAnalysis.appendChild(mainInfo);
+
+                // Add roaming information if available
+                if (data.roaming_country || data.roaming_network) {
+                    const roamingInfo = document.createElement('div');
+                    roamingInfo.className = 'list-group-item';
+                    roamingInfo.innerHTML = `
+                        <h6 class="mb-1">Roaming Information</h6>
+                        <p class="mb-1"><strong>Roaming Country:</strong> ${data.roaming_country}</p>
+                        <p class="mb-1"><strong>Roaming Network:</strong> ${data.roaming_network}</p>
+                    `;
+                    networkAnalysis.appendChild(roamingInfo);
+                }
+
+                // Add last seen information
+                if (data.last_seen) {
+                    const lastSeen = document.createElement('div');
+                    lastSeen.className = 'list-group-item';
+                    lastSeen.innerHTML = `
+                        <h6 class="mb-1">Last Seen</h6>
+                        <p class="mb-1">${data.last_seen}</p>
+                    `;
+                    networkAnalysis.appendChild(lastSeen);
+                }
+
+                // Store results for bulk view
+                hlrResults[number] = data;
+            })
+            .catch(error => {
+                toastr.error('Error performing lookup');
+                console.error('Error:', error);
+            });
+    }
+
+    function bulkLookup() {
+        const numbers = document.getElementById('bulkNumbers').value.trim().split('\n').filter(n => n.trim());
+        if (!numbers.length) {
+            toastr.error('Please enter at least one number');
+            return;
+        }
+
+        fetch('/api/osint/hlr/bulk_lookup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ numbers: numbers })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                toastr.error(data.error);
+                return;
+            }
+
+            const networkAnalysis = document.getElementById('networkAnalysis');
+            networkAnalysis.innerHTML = '';
+
+            // Display results for each number
+            Object.entries(data.results).forEach(([number, result]) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'list-group-item';
+                resultItem.innerHTML = `
+                    <h6 class="mb-1">Results for ${number}</h6>
+                    <p class="mb-1"><strong>Status:</strong> ${result.status}</p>
+                    ${result.status === 'success' ? `
+                        <p class="mb-1"><strong>Network:</strong> ${result.network}</p>
+                        <p class="mb-1"><strong>Country:</strong> ${result.country}</p>
+                    ` : `
+                        <p class="mb-1"><strong>Error:</strong> ${result.message}</p>
+                    `}
+                `;
+                networkAnalysis.appendChild(resultItem);
+            });
+        })
+        .catch(error => {
+            toastr.error('Error performing bulk lookup');
+            console.error('Error:', error);
+        });
+    }
+
+    // Update capture files every 30 seconds
+    setInterval(updateCaptureFiles, 30000);
+    updateCaptureFiles();
+</script>
+
+    function startCapture() {
+        const interface = document.getElementById('captureInterface').value;
+        const filter = document.getElementById('captureFilter').value;
+
+        fetch('/api/osint/start_capture', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                interface: interface,
+                filter: filter
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                toastr.error(data.error);
+            } else {
+                currentCapture = data.capture_file;
+                toastr.success('Capture started');
+                updateCaptureFiles();
+            }
+        })
+        .catch(error => {
+            toastr.error('Error starting capture');
+            console.error('Error:', error);
+        });
+    }
+
+    function stopCapture() {
+        fetch('/api/osint/stop_capture', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                toastr.error(data.error);
+            } else {
+                currentCapture = null;
+                toastr.success('Capture stopped');
+            }
+        })
+        .catch(error => {
+            toastr.error('Error stopping capture');
+            console.error('Error:', error);
+        });
+    }
+
+    function updateCaptureFiles() {
+        fetch('/api/osint/capture_files')
+            .then(response => response.json())
+            .then(data => {
+                const filesList = document.getElementById('captureFilesList');
+                filesList.innerHTML = '';
+                
+                data.forEach(file => {
+                    const item = document.createElement('a');
+                    item.href = `/api/osint/download/${file.name}`;
+                    item.className = 'list-group-item list-group-item-action';
+                    item.innerHTML = `
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">${file.name}</h6>
+                            <small>${file.created}</small>
+                        </div>
+                        <small class="text-muted">${(file.size / 1024 / 1024).toFixed(2)} MB</small>
+                    `;
+                    filesList.appendChild(item);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function analyzeCapture(file) {
+        fetch(`/api/osint/analyze_capture?file=${file}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    toastr.error(data.error);
+                    return;
+                }
+
+                // Update protocol stats
+                const protocolStats = document.getElementById('protocolStats');
+                protocolStats.innerHTML = '';
+                Object.entries(data.protocols).forEach(([protocol, count]) => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item';
+                    item.innerHTML = `${protocol}: ${count}`;
+                    protocolStats.appendChild(item);
+                });
+
+                // Update connection table
+                const connectionTable = document.getElementById('connectionTable');
+                connectionTable.innerHTML = '';
+                Object.entries(data.connections).forEach(([key, conn]) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${conn.src}</td>
+                        <td>${conn.dst}</td>
+                        <td>${conn.protocol}</td>
+                        <td>${conn.count}</td>
+                    `;
+                    connectionTable.appendChild(row);
+                });
+
+                // Update DNS requests
+                const dnsTable = document.getElementById('dnsTable');
+                dnsTable.innerHTML = '';
+                data.dns_requests.forEach(request => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${request.timestamp}</td>
+                        <td>${request.src}</td>
+                        <td>${request.dst}</td>
+                        <td>${request.query}</td>
+                    `;
+                    dnsTable.appendChild(row);
+                });
+
+                // Update HTTP requests
+                const httpTable = document.getElementById('httpTable');
+                httpTable.innerHTML = '';
+                data.http_requests.forEach(request => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${request.timestamp}</td>
+                        <td>${request.src}</td>
+                        <td>${request.dst}</td>
+                        <td>${request.method}</td>
+                        <td>${request.path}</td>
+                    `;
+                    httpTable.appendChild(row);
+                });
+
+                // Update TLS handshakes
+                const tlsTable = document.getElementById('tlsTable');
+                tlsTable.innerHTML = '';
+                data.tls_handshakes.forEach(handshake => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${handshake.timestamp}</td>
+                        <td>${handshake.src}</td>
+                        <td>${handshake.dst}</td>
+                        <td>${handshake.handshake_type}</td>
+                    `;
+                    tlsTable.appendChild(row);
+                });
+            })
+            .catch(error => {
+                toastr.error('Error analyzing capture');
+                console.error('Error:', error);
+            });
+    }
+
+    // Update capture files every 30 seconds
+    setInterval(updateCaptureFiles, 30000);
+    updateCaptureFiles();
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+metrics:
+  interval: 60
+  enabled: true
+  
+alerts:
+  threshold:
+    cpu: 80
+    memory: 80
+    disk: 90
+  
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  file: logs/monitoring.log
+
+network:
+  interfaces:
+    - eth0
+    - wlan0
+  
+security:
+  scan_interval: 300
+  suspicious_patterns:
+    - '.*malware.*'
+    - '.*attack.*'

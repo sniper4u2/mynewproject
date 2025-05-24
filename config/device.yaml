@@ -1,0 +1,107 @@
+# Device Connection Configuration
+
+device:
+  # General Settings
+  general:
+    max_connections: 100
+    timeout_seconds: 30
+    retry_attempts: 3
+    retry_delay_seconds: 5
+
+  # Phone Connection Settings
+  phone:
+    enabled: true
+    validation:
+      enabled: true
+      countries:
+        - "US"
+        - "GB"
+        - "CA"
+    sms_gateway:
+      enabled: false
+      provider: "twilio"
+      credentials:
+        account_sid: "your_account_sid"
+        auth_token: "your_auth_token"
+
+  # IP Connection Settings
+  ip:
+    enabled: true
+    protocols:
+      - "http"
+      - "https"
+      - "mqtt"
+    ports:
+      http: 8080
+      https: 8443
+      mqtt: 1883
+    network_scan:
+      enabled: true
+      subnets:
+        - "192.168.1.0/24"
+        - "10.0.0.0/24"
+      timeout_seconds: 2
+      concurrent_scans: 10
+
+  # Authentication Settings
+  auth:
+    required: true
+    methods:
+      - "token"
+      - "certificate"
+      - "password"
+    token_expiration_hours: 24
+
+  # Platform Support
+  platforms:
+    ios:
+      min_version: "14.0"
+      supported_models:
+        - "iPhone 12"
+        - "iPhone 13"
+        - "iPhone 14"
+    android:
+      min_version: "11"
+      supported_models:
+        - "Pixel 4"
+        - "Pixel 5"
+        - "Pixel 6"
+
+  # Security Settings
+  security:
+    encryption:
+      enabled: true
+      algorithm: "TLS"
+      cipher_suites:
+        - "TLS_AES_128_GCM_SHA256"
+        - "TLS_AES_256_GCM_SHA384"
+    rate_limiting:
+      enabled: true
+      max_requests: 100
+      window_seconds: 60
+    logging:
+      enabled: true
+      level: "INFO"
+      retention_days: 30
+
+  # Monitoring Settings
+  monitoring:
+    enabled: true
+    frequency_seconds: 30
+    metrics:
+      - "connection_status"
+      - "response_time"
+      - "error_rate"
+      - "bandwidth_usage"
+
+  # Notification Settings
+  notifications:
+    enabled: true
+    methods:
+      - "email"
+      - "webhook"
+      - "sms"
+    thresholds:
+      connection_loss: 60  # seconds
+      high_latency: 1000  # milliseconds
+      error_rate: 0.05  # 5%

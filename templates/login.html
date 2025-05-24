@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Login - B13 C2{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <img src="{{ url_for('static', filename='assets/b13_logo.png') }}" alt="B13 Logo" style="height: 80px; margin-bottom: 20px;">
+        <h2 class="text-warning">B13</h2>
+        <h2 class="text-success">C2</h2>
+        <p class="text-muted">by sniper4u2</p>
+        <div class="tunisian-flag">
+            <img src="{{ url_for('static', filename='assets/tunisia_flag.png') }}" alt="Tunisian Flag" style="height: 30px;">
+            <span class="text-danger">TN</span>
+        </div>
+    </div>
+    
+    {% if request.args.get('error') %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Error: {{ request.args.get('error') | replace('+', ' ') }}
+    </div>
+    {% endif %}
+    
+    <form method="POST" action="/api/login">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt me-2"></i> Login
+            </button>
+            <a href="{{ url_for('forgot_password') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-key me-2"></i> Forgot Password
+            </a>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h2 {
+        margin: 10px 0;
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+
+    .tunisian-flag {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .tunisian-flag img {
+        margin-right: 5px;
+    }
+
+    .input-group {
+        transition: all 0.3s ease;
+    }
+
+    .input-group:hover {
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #00ff00, #00cc00);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+    }
+</style>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+<script>
+    // Add matrix effect to the background
+    const matrixContainer = document.createElement('div');
+    matrixContainer.className = 'matrix-background';
+    matrixContainer.innerHTML = `
+        <canvas id="matrixCanvas"></canvas>
+    `;
+    document.body.appendChild(matrixContainer);
+
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const chars = '0123456789ABCDEF';
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) {
+        drops[i] = 1;
+    }
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#00ff00';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.95) {
+                drops[i] = 0;
+            }
+            
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 50);
+
+    // Add glowing effect to inputs
+    document.querySelectorAll('.input-group').forEach(group => {
+        group.addEventListener('focus', () => {
+            group.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.3)';
+        });
+        
+        group.addEventListener('blur', () => {
+            group.style.boxShadow = 'none';
+        });
+    });
+</script>
+{% endblock %}

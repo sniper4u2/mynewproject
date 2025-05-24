@@ -1,0 +1,172 @@
+# GSM/SS7 Configuration
+
+# Yate/YateBTS Configuration
+yate:
+  host: localhost
+  port: 5038
+  username: admin
+  password: admin
+  max_connections: 100
+  timeout: 30
+  retry_delay: 5
+  max_retries: 3
+  monitoring_interval: 10
+  error_retry_delay: 5
+
+# Kamailio SS7 Configuration
+kamailio:
+  host: localhost
+  port: 5060
+  protocols:
+    mtp:
+      enabled: true
+      version: 3
+      max_messages: 1000
+    sccp:
+      enabled: true
+      network_indicator: 0
+      service_indicator: 3
+    tcap:
+      enabled: true
+      max_dialogs: 100
+    map:
+      enabled: true
+      version: 2
+      services:
+        - location_update
+        - authentication
+        - call_control
+
+# SS7 Protocol Configuration
+ss7:
+  protocols:
+    mtp:
+      level: 3
+      max_messages: 1000
+      window_size: 7
+    sccp:
+      network_indicator: 0
+      service_indicator: 3
+      max_dialogs: 100
+    tcap:
+      max_dialogs: 100
+      max_components: 10
+    map:
+      version: 2
+      services:
+        - location_update
+        - authentication
+        - call_control
+
+# GSM Protocol Configuration
+gsm:
+  protocols:
+    rr:
+      power_control:
+        max_power: 33
+        min_power: 5
+        step_size: 2
+      timing_adjustment:
+        max_adjustment: 63
+        min_adjustment: 0
+        step_size: 1
+    lapdm:
+      frame_size: 160
+      error_correction:
+        enabled: true
+        algorithm: Viterbi
+    mac:
+      access_classes:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+      priority_levels:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+
+# Security Configuration
+security:
+  encryption:
+    algorithms:
+      - A3A8
+      - A5/1
+      - A5/2
+      - A5/3
+    key_sizes:
+      - 64
+      - 128
+    default_algorithm: A5/1
+  authentication:
+    methods:
+      - SIM
+      - AKA
+      - EAP-AKA
+    default_method: SIM
+  integrity:
+    algorithms:
+      - GSM-MAC
+      - UMTS-MAC
+    default_algorithm: GSM-MAC
+
+# Monitoring Configuration
+monitoring:
+  interval: 10  # seconds
+  thresholds:
+    error_rate: 0.1
+    traffic_volume: 1000000  # bytes
+    connection_timeout: 30  # seconds
+  alerts:
+    enabled: true
+    methods:
+      - email
+      - syslog
+      - webhook
+
+# Logging Configuration
+logging:
+  level: INFO
+  format: '%(asctime)s - %(levelname)s - %(message)s'
+  file: gsm_ss7.log
+  max_size: 100MB
+  backup_count: 5
+
+# Database Configuration
+database:
+  uri: mongodb://localhost:27017
+  name: gsm_ss7
+  collection: ss7_messages
+  retention: 30  # days
+
+# Cache Configuration
+cache:
+  ttl: 3600  # seconds
+  max_entries: 1000
+  cleanup_interval: 300  # seconds
+
+# Network Configuration
+network:
+  interfaces:
+    - eth0
+  dns_servers:
+    - 8.8.8.8
+    - 8.8.4.4
+  mtu: 1500
+  max_connections: 1000
+
+# Performance Configuration
+performance:
+  max_concurrent_tasks: 100
+  task_queue_size: 1000
+  memory_limit: 4GB
+  cpu_limit: 80%

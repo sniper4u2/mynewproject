@@ -1,0 +1,11 @@
+2025-05-24 17:47:48,034 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: Fernet key must be 32 url-safe base64-encoded bytes.
+2025-05-24 17:49:05,214 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: name 'YateBTSConfig' is not defined
+2025-05-24 17:49:25,564 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: name 'Fernet' is not defined
+2025-05-24 17:49:51,864 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: name 'Fernet' is not defined
+2025-05-24 17:50:16,216 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: name 'asyncio' is not defined
+2025-05-24 17:50:39,183 - C2Server - ERROR - Error refreshing database: object DeleteResult can't be used in 'await' expression
+2025-05-24 17:50:39,183 - GSM_SS7_Init - INFO - GSM/SS7 system initialized successfully
+2025-05-24 17:51:41,800 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: YateBTSIntegration.start_monitoring() missing 1 required positional argument: 'device_id'
+2025-05-24 17:52:25,564 - GSM_SS7_Init - ERROR - Failed to initialize GSM/SS7 system: YateBTSIntegration.start_monitoring() missing 1 required positional argument: 'device_id'
+2025-05-24 17:52:44,117 - C2Server - ERROR - Error refreshing database: object DeleteResult can't be used in 'await' expression
+2025-05-24 17:52:44,118 - GSM_SS7_Init - INFO - GSM/SS7 system initialized successfully

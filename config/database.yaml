@@ -1,0 +1,19 @@
+mongodb:
+  host: localhost
+  port: 27017
+  username: paypeur
+  password: 31101986
+  database: paypeur
+
+influxdb:
+  host: localhost
+  port: 8086
+  database: b13
+
+elasticsearch:
+  host: localhost
+  port: 9200
+
+redis:
+  host: localhost
+  port: 6379

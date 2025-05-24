@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - B13 C2{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Stats Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="stat-card fade-in">
+            <div class="stat-number">{{ stats.total_agents }}</div>
+            <div class="stat-label">Total Agents</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card fade-in">
+            <div class="stat-number">{{ stats.active_agents }}</div>
+            <div class="stat-label">Active Agents</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card fade-in">
+            <div class="stat-number">{{ stats.mobile_sessions }}</div>
+            <div class="stat-label">Mobile Sessions</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="stat-card fade-in">
+            <div class="stat-number">{{ stats.total_commands }}</div>
+            <div class="stat-label">Commands Executed</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="card fade-in">
+    <div class="card-header">
+        <h5 class="mb-0">Recent Activity</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for activity in recent_activity %}
+                    <tr>
+                        <td>{{ activity.time }}</td>
+                        <td>{{ activity.type }}</td>
+                        <td>{{ activity.description }}</td>
+                        <td>
+                            <span class="badge {% if activity.status == 'success' %}bg-success{% elif activity.status == 'error' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ activity.status }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Traffic Visualization -->
+<div class="traffic-visualization fade-in">
+    <h3>Mobile Traffic Visualization</h3>
+    <canvas id="trafficChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Mobile Traffic Chart
+    const ctx = document.getElementById('trafficChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00'],
+            datasets: [{
+                label: 'Active Sessions',
+                data: [12, 19, 3, 5, 2, 3, 15],
+                borderColor: 'rgba(0, 255, 0, 0.8)',
+                tension: 0.4,
+                backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                pointBackgroundColor: 'rgba(0, 255, 0, 0.8)',
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'rgba(0, 255, 0, 0.8)'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        color: 'rgba(0, 255, 0, 0.8)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'rgba(0, 255, 0, 0.8)'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: gsm_ss7_monitor
+Version: 1.0.0
+Summary: GSM/SS7 Monitoring System
+Author: B13
+Author-email: B13 <b13@example.com>
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.8

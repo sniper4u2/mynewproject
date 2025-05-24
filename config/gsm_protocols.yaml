@@ -1,0 +1,259 @@
+# GSM Protocol Configuration
+
+# Radio Resource (RR) Configuration
+rr:
+  enabled: true
+  channels:
+    - "BCCH"
+    - "CCCH"
+    - "TCH/F"
+    - "TCH/H"
+    - "SDCCH/4"
+    - "SDCCH/8"
+  power_control:
+    max_power: 33
+    min_power: 5
+    step_size: 2
+  timing_adjustment:
+    max_adjustment: 63
+    min_adjustment: 0
+    step_size: 1
+
+# LAPDm Configuration
+lapdm:
+  enabled: true
+  frame_size: 160
+  window_size: 7
+  max_retransmissions: 3
+  timeout_seconds: 2
+  error_correction:
+    enabled: true
+    algorithm: "Viterbi"
+
+# Medium Access Control (MAC) Configuration
+mac:
+  enabled: true
+  access_classes:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+  priority_levels:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+  retransmission_delay: 10
+  max_retransmissions: 3
+
+# Mobility Management (MM) Configuration
+mm:
+  enabled: true
+  location_updates:
+    periodic: true
+    interval_hours: 24
+    on_demand: true
+  authentication:
+    retries: 3
+    timeout_seconds: 30
+    algorithms:
+      - "A3"
+      - "A8"
+  ciphering:
+    algorithms:
+      - "A5/1"
+      - "A5/2"
+      - "A5/3"
+
+# Call Control (CC) Configuration
+cc:
+  enabled: true
+  call_setup:
+    timeout_seconds: 30
+    max_retries: 3
+  call_hold:
+    enabled: true
+    timeout_seconds: 60
+  call_transfer:
+    enabled: true
+    max_transfers: 3
+  call_waiting:
+    enabled: true
+    priority: "high"
+
+# SMS Configuration
+sms:
+  enabled: true
+  message_size:
+    max_bytes: 160
+    segments: true
+  delivery_reports:
+    enabled: true
+    timeout_seconds: 60
+  storage:
+    max_messages: 1000
+    retention_days: 30
+
+# Supplementary Services (SS) Configuration
+ss:
+  enabled: true
+  services:
+    - "Call Waiting"
+    - "Call Hold"
+    - "Call Transfer"
+    - "Call Barring"
+    - "Call Forwarding"
+    - "Multiparty"
+  activation:
+    timeout_seconds: 30
+    max_retries: 3
+
+# Mobile Application Part (MAP) Configuration
+map:
+  enabled: true
+  operations:
+    - "SendRoutingInfo"
+    - "UpdateLocation"
+    - "AuthenticationInfo"
+    - "CancelLocation"
+    - "ProvideRoamingNumber"
+  security:
+    authentication: true
+    encryption: true
+    integrity: true
+
+# SS7 Configuration
+ss7:
+  enabled: true
+  signaling_points:
+    - "HSTP"
+    - "LSTP"
+    - "SP"
+  links:
+    - "A"
+    - "B"
+    - "C"
+    - "D"
+  linksets:
+    - "A"
+    - "B"
+    - "C"
+    - "D"
+
+# ISUP Configuration
+isup:
+  enabled: true
+  circuits:
+    - "0-1023"
+  signaling:
+    - "IAM"
+    - "ACM"
+    - "ANM"
+    - "REL"
+    - "RLC"
+
+# BSS Application Part (BSSAP) Configuration
+bssap:
+  enabled: true
+  dtap:
+    enabled: true
+    operations:
+      - "Paging"
+      - "LocationUpdate"
+      - "Authentication"
+  bssmap:
+    enabled: true
+    operations:
+      - "Handover"
+      - "LocationUpdate"
+
+# GPRS Configuration
+bssgp:
+  enabled: true
+  cells:
+    - "0-65535"
+  pdch:
+    max_channels: 8
+    allocation:
+      - "static"
+      - "dynamic"
+
+gtp:
+  enabled: true
+  tunnels:
+    - "0-65535"
+  versions:
+    - "GTPv0"
+    - "GTPv1"
+    - "GTPv2"
+
+# Security Configuration
+security:
+  authentication:
+    algorithms:
+      - "A3"
+      - "A8"
+    keys:
+      - "Ki"
+      - "RAND"
+      - "SRES"
+      - "Kc"
+  encryption:
+    algorithms:
+      - "A5/1"
+      - "A5/2"
+      - "A5/3"
+    keys:
+      - "Kc"
+      - "CK"
+      - "IK"
+
+# SIM Card Configuration
+sim:
+  enabled: true
+  authentication:
+    ki: "00112233445566778899aabbccddeeff"
+    rand: "00112233445566778899aabbccddeeff"
+    sres: "00112233"
+    kc: "00112233445566778899aabbccddeeff"
+
+# Protocol Stack Configuration
+protocol_stack:
+  layers:
+    - "RR"
+    - "LAPDm"
+    - "MAC"
+    - "MM"
+    - "CC"
+    - "SMS"
+    - "SS"
+    - "MAP"
+    - "SS7"
+    - "ISUP"
+    - "BSSAP"
+    - "DTAP"
+    - "GTP"
+    - "BSSGP"
+    - "SNDCP"
+    - "LLC"
+  sequence:
+    - "RR"
+    - "LAPDm"
+    - "MAC"
+    - "MM"
+    - "CC"
+    - "SMS"
+    - "SS"
+    - "MAP"
+    - "SS7"
+    - "ISUP"
+    - "BSSAP"
+    - "DTAP"
+    - "GTP"
+    - "BSSGP"
+    - "SNDCP"
+    - "LLC"
