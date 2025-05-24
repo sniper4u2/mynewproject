@@ -49,7 +49,42 @@ jwt = JWTManager(app)
 # Root route
 @app.route('/')
 def index():
-    return render_template('tools.html')
+    return redirect(url_for('dashboard'))
+
+# Dashboard route
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+# Agents route
+@app.route('/agents')
+def agents():
+    return render_template('agents.html')
+
+# Connections route
+@app.route('/connections')
+def connections():
+    return render_template('connections.html')
+
+# OSINT route
+@app.route('/osint')
+def osint():
+    return render_template('osint.html')
+
+# Mobile route
+@app.route('/mobile')
+def mobile():
+    return render_template('mobile.html')
+
+# Monitoring route
+@app.route('/monitoring')
+def monitoring():
+    return render_template('monitoring.html')
+
+# Settings route
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
 
 # Initialize MongoDB client
 try:
@@ -97,6 +132,21 @@ osint_handler = OSINTHandler(db, encryption_key)
 # Initialize web interface routes
 from src.web.routes import init_web_routes
 osint_bp, gsm_bp = init_web_routes(app, db, encryption_key)
+
+# Authentication routes
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # Add your authentication logic here
+        return redirect(url_for('dashboard'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    # Add your logout logic here
+    return redirect(url_for('login'))
 
 # Initialize API routes
 from src.api.routes import init_api_routes

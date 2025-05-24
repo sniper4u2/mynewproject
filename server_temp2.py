@@ -54,7 +54,18 @@ def index():
 # Dashboard route
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html')
+    # Get stats from MongoDB
+    stats = {
+        'total_agents': db.agents.count_documents({}),
+        'active_agents': db.agents.count_documents({'status': 'active'}),
+        'mobile_sessions': db.mobile_sessions.count_documents({}),
+        'total_commands': db.commands.count_documents({})
+    }
+    
+    # Get recent activity (last 10 activities)
+    recent_activity = list(db.activity.find().sort('timestamp', -1).limit(10))
+    
+    return render_template('dashboard.html', stats=stats, recent_activity=recent_activity)
 
 # Agents route
 @app.route('/agents')
@@ -70,6 +81,11 @@ def connections():
 @app.route('/osint')
 def osint():
     return render_template('osint.html')
+
+# Mobile route
+@app.route('/mobile')
+def mobile():
+    return render_template('mobile.html')
 
 # Monitoring route
 @app.route('/monitoring')
@@ -127,6 +143,21 @@ osint_handler = OSINTHandler(db, encryption_key)
 # Initialize web interface routes
 from src.web.routes import init_web_routes
 osint_bp, gsm_bp = init_web_routes(app, db, encryption_key)
+
+# Authentication routes
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # Add your authentication logic here
+        return redirect(url_for('dashboard'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    # Add your logout logic here
+    return redirect(url_for('login'))
 
 # Initialize API routes
 from src.api.routes import init_api_routes
